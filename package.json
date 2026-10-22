@@ -1,5 +1,5 @@
 {
-  "name": "@road/ftp-srv",
+  "name": "@e-flux-platform/ftp-srv",
   "version": "0.1.0",
   "description": "Modern, extensible FTP Server",
   "keywords": [
@@ -97,8 +97,5 @@
   "directories": {
     "test": "test"
   },
-  "author": "",
-  "publishConfig": {
-    "registry": "https://europe-west3-npm.pkg.dev/eflux-production/node/"
-  }
+  "author": ""
 }
