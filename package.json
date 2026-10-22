@@ -1,6 +1,6 @@
 {
-  "name": "@amirniaki/ftp-srv",
-  "version": "0.0.7",
+  "name": "@road/ftp-srv",
+  "version": "0.1.0",
   "description": "Modern, extensible FTP Server",
   "keywords": [
     "ftp",
@@ -24,7 +24,7 @@
   "types": "./ftp-srv.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AmirSoleimani/ftp-srv.git"
+    "url": "git+https://github.com/e-flux-platform/ftp-srv.git"
   },
   "scripts": {
     "pre-release": "npm run verify",
@@ -91,11 +91,14 @@
     "node": ">=22.23.4"
   },
   "bugs": {
-    "url": "https://github.com/AmirSoleimani/ftp-srv/issues"
+    "url": "https://github.com/e-flux-platform/ftp-srv/issues"
   },
-  "homepage": "https://github.com/AmirSoleimani/ftp-srv#readme",
+  "homepage": "https://github.com/e-flux-platform/ftp-srv#readme",
   "directories": {
     "test": "test"
   },
-  "author": ""
+  "author": "",
+  "publishConfig": {
+    "registry": "https://europe-west3-npm.pkg.dev/eflux-production/node/"
+  }
 }
