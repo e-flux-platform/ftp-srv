@@ -7,6 +7,7 @@ module.exports = {
     if (!this.fs.read) return this.reply(402, 'Not supported by file system');
 
     const filePath = command.arg;
+    const mode = this.connector.type;
     this.reply(150).then(() => this.connector.socket && this.connector.socket.resume())
     return this.connector.waitForConnection()
       .tap(() => this.commandSocket.pause())
@@ -39,17 +40,18 @@ module.exports = {
 
         this.restByteCount = 0;
 
-        return eventsPromise.tap(() => this.emit('RETR', null, serverPath))
+        return eventsPromise.tap(() => this.emit('RETR', null, serverPath, mode))
           .then(() => this.reply(226, clientPath))
           .finally(() => stream.destroy && stream.destroy());
       })
       .catch(Promise.TimeoutError, (err) => {
         log.error(err);
+        this.emit('RETR', err, undefined, mode);
         return this.reply(425, 'No connection established');
       })
       .catch((err) => {
         log.error(err);
-        this.emit('RETR', err);
+        this.emit('RETR', err, undefined, mode);
         return this.reply(551, err.message);
       })
       .finally(() => {

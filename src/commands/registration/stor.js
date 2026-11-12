@@ -8,6 +8,7 @@ module.exports = {
 
     const append = command.directive === 'APPE';
     const fileName = command.arg;
+    const mode = this.connector.type;
     this.reply(150).then((() => this.connector.socket && this.connector.socket.resume()))
     return this.connector.waitForConnection()
       .tap(() => this.commandSocket.pause())
@@ -49,17 +50,18 @@ module.exports = {
         this.restByteCount = 0;
 
         return Promise.all([streamPromise, socketPromise])
-          .tap(() => this.emit('STOR', null, serverPath))
+          .tap(() => this.emit('STOR', null, serverPath, mode))
           .then(() => this.reply(226, clientPath))
           .finally(() => stream.destroy && stream.destroy());
       })
       .catch(Promise.TimeoutError, (err) => {
         log.error(err);
+        this.emit('STOR', err, undefined, mode);
         return this.reply(425, 'No connection established');
       })
       .catch((err) => {
         log.error(err);
-        this.emit('STOR', err);
+        this.emit('STOR', err, undefined, mode);
         return this.reply(550, err.message);
       })
       .finally(() => {
