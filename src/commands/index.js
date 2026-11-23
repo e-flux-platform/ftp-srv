@@ -55,6 +55,7 @@ class FtpCommands {
     log.trace({ command: logCommand }, "Handle command");
 
     if (!REGISTRY.hasOwnProperty(command.directive)) {
+      this.connection.emit("command-rejected", command.directive, "unknown");
       return this.connection.reply(
         502,
         `Command not allowed: ${command.directive}`
@@ -62,6 +63,7 @@ class FtpCommands {
     }
 
     if (_.includes(this.blacklist, command.directive)) {
+      this.connection.emit("command-rejected", command.directive, "blacklisted");
       return this.connection.reply(
         502,
         `Command blacklisted: ${command.directive}`
@@ -72,6 +74,7 @@ class FtpCommands {
       this.whitelist.length > 0 &&
       !_.includes(this.whitelist, command.directive)
     ) {
+      this.connection.emit("command-rejected", command.directive, "not_whitelisted");
       return this.connection.reply(
         502,
         `Command not whitelisted: ${command.directive}`

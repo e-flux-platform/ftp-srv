@@ -12,6 +12,7 @@ describe('FtpCommands', function () {
     authenticated: false,
     log: bunyan.createLogger({name: 'FtpCommands'}),
     reply: () => Promise.resolve({}),
+    emit: () => {},
     server: {
       options: {
         blacklist: ['allo']
@@ -25,6 +26,7 @@ describe('FtpCommands', function () {
     commands = new FtpCommands(mockConnection);
 
     sandbox.spy(mockConnection, 'reply');
+    sandbox.spy(mockConnection, 'emit');
     sandbox.spy(commands, 'handle');
     sandbox.spy(commands, 'parse');
   });
@@ -90,6 +92,7 @@ describe('FtpCommands', function () {
       return commands.handle('bad')
       .then(() => {
         expect(mockConnection.reply.callCount).to.equal(1);
+        expect(mockConnection.emit.calledWith('command-rejected', 'BAD', 'unknown')).to.equal(true);
         expect(mockConnection.reply.args[0][0]).to.equal(502);
       });
     });
@@ -100,6 +103,7 @@ describe('FtpCommands', function () {
         expect(mockConnection.reply.callCount).to.equal(1);
         expect(mockConnection.reply.args[0][0]).to.equal(502);
         expect(mockConnection.reply.args[0][1]).to.match(/blacklisted/);
+        expect(mockConnection.emit.calledWith('command-rejected', 'ALLO', 'blacklisted')).to.equal(true);
       });
     });
 
@@ -110,6 +114,7 @@ describe('FtpCommands', function () {
         expect(mockConnection.reply.callCount).to.equal(1);
         expect(mockConnection.reply.args[0][0]).to.equal(502);
         expect(mockConnection.reply.args[0][1]).to.match(/whitelisted/);
+        expect(mockConnection.emit.calledWith('command-rejected', 'AUTH', 'not_whitelisted')).to.equal(true);
       });
     });
 
